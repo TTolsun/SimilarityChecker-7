@@ -1,18 +1,20 @@
 #include <string>
 
+using namespace std;
+
 class SimilarityChecker
 {
 public:
-	static int checkLength(const std::string& str1, const std::string& str2)
+	static int checkLength(const string& str1, const string& str2)
 	{
-		std::string longStr{}, shortStr{};
+		string longStr{}, shortStr{};
 		compareStringLength(str1, str2, longStr, shortStr);
 		return calculateScore(longStr, shortStr);
 	}
 
 private:
-	static void compareStringLength(const std::string& str1, const std::string& str2, std::string& longStr,
-	                                std::string& shortStr)
+	static void compareStringLength(const string& str1, const string& str2, string& longStr,
+	                                string& shortStr)
 	{
 		if (str1.length() > str2.length())
 		{
@@ -26,7 +28,7 @@ private:
 		}
 	}
 
-	static int calculateScore(const std::string& longStr, const std::string& shortStr)
+	static int calculateScore(const string& longStr, const string& shortStr)
 	{
 		const auto gapValue = longStr.length() - shortStr.length();
 		const auto divideValue = static_cast<float>(gapValue) / static_cast<float>(shortStr.length());
