@@ -13,17 +13,17 @@ public:
 		return calculateLengthScore(longStr, shortStr);
 	}
 
-	static int checkSameAlpha(const std::string& str1, const std::string& str2)
+	static int checkSameAlpha(const string& str1, const string& str2)
 	{
-		return calculateSameAlphaScore({ str1, str2 });
+		return calculateSameAlphaScore({str1, str2});
 	}
 
 private:
 	struct CharSet
 	{
-		std::set<char> strSet{}, str1Set{}, str2Set{};
+		set<char> strSet{}, str1Set{}, str2Set{};
 
-		CharSet(const std::string& str1, const std::string& str2)
+		CharSet(const string& str1, const string& str2)
 		{
 			for (const auto& ch : str1)
 			{
@@ -38,8 +38,8 @@ private:
 		}
 	};
 
-	static void compareStringLength(const string& str1, const string& str2, string& longStr,
-	                                string& shortStr)
+	static void compareStringLength(const string& str1, const string& str2,
+	                                string& longStr, string& shortStr)
 	{
 		if (str1.length() > str2.length())
 		{
@@ -55,20 +55,22 @@ private:
 
 	static int calculateLengthScore(const string& longStr, const string& shortStr)
 	{
-		const auto gapValue = longStr.length() - shortStr.length();
-		const auto divideValue = static_cast<float>(gapValue) / static_cast<float>(shortStr.length());
-		return static_cast<int>((1.0f - divideValue) * 60.0f);
+		const auto gapValue =
+			static_cast<float>(longStr.length() - shortStr.length());
+		const auto divideValue =
+			gapValue / static_cast<float>(shortStr.length());
+		return static_cast<int>((1.f - divideValue) * 60.f);
 	}
 
 	static int calculateSameAlphaScore(const CharSet& charSet)
 	{
-		const auto totalCnt = charSet.strSet.size();
-		int sameCnt{};
+		const auto totalCnt = static_cast<float>(charSet.strSet.size());
+		float sameCnt{};
 		for (const auto& ch : charSet.str1Set)
 		{
 			if (charSet.str2Set.count(ch))
 				sameCnt++;
 		}
-		return static_cast<int>((static_cast<float>(sameCnt) / static_cast<float>(totalCnt)) * 40.f);
+		return static_cast<int>((sameCnt / totalCnt) * 40.f);
 	}
 };
