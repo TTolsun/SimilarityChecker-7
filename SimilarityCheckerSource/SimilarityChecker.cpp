@@ -1,4 +1,5 @@
 #include <string>
+#include <set>
 
 using namespace std;
 
@@ -9,12 +10,36 @@ public:
 	{
 		string longStr{}, shortStr{};
 		compareStringLength(str1, str2, longStr, shortStr);
-		return calculateScore(longStr, shortStr);
+		return calculateLengthScore(longStr, shortStr);
+	}
+
+	static int checkSameAlpha(const string& str1, const string& str2)
+	{
+		return calculateSameAlphaScore({str1, str2});
 	}
 
 private:
-	static void compareStringLength(const string& str1, const string& str2, string& longStr,
-	                                string& shortStr)
+	struct CharSet
+	{
+		set<char> strSet{}, str1Set{}, str2Set{};
+
+		CharSet(const string& str1, const string& str2)
+		{
+			for (const auto& ch : str1)
+			{
+				strSet.insert(ch);
+				str1Set.insert(ch);
+			}
+			for (const auto& ch : str2)
+			{
+				strSet.insert(ch);
+				str2Set.insert(ch);
+			}
+		}
+	};
+
+	static void compareStringLength(const string& str1, const string& str2,
+	                                string& longStr, string& shortStr)
 	{
 		if (str1.length() > str2.length())
 		{
@@ -28,10 +53,24 @@ private:
 		}
 	}
 
-	static int calculateScore(const string& longStr, const string& shortStr)
+	static int calculateLengthScore(const string& longStr, const string& shortStr)
 	{
-		const auto gapValue = longStr.length() - shortStr.length();
-		const auto divideValue = static_cast<float>(gapValue) / static_cast<float>(shortStr.length());
-		return static_cast<int>((1.0f - divideValue) * 60.0f);
+		const auto gapValue =
+			static_cast<float>(longStr.length() - shortStr.length());
+		const auto divideValue =
+			gapValue / static_cast<float>(shortStr.length());
+		return static_cast<int>((1.f - divideValue) * 60.f);
+	}
+
+	static int calculateSameAlphaScore(const CharSet& charSet)
+	{
+		const auto totalCnt = static_cast<float>(charSet.strSet.size());
+		float sameCnt{};
+		for (const auto& ch : charSet.str1Set)
+		{
+			if (charSet.str2Set.count(ch))
+				sameCnt++;
+		}
+		return static_cast<int>((sameCnt / totalCnt) * 40.f);
 	}
 };
